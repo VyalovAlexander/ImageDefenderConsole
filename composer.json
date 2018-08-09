@@ -1,0 +1,17 @@
+{
+    "name": "vyalov.alexander/imagedefenderconsole",
+    "description": "Imposition of a protective mask on an image via console",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vyalov Alexander",
+            "email": "vyalov.alexander@gmail.com"
+        }
+    ],
+    "require": {
+        "php-di/php-di": "^6.0",
+        "mnapoli/silly": "^1.7",
+        "vyalov.alexander/imagedefender": "^3.1"
+    }
+}
