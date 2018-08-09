@@ -1,0 +1,60 @@
+#! /usr/bin/env php
+<?php
+
+$container = require  __DIR__  . DIRECTORY_SEPARATOR . 'bootstrap.php';
+
+use VyalovAlexander\ImageDefender\StampImageDefenderInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use VyalovAlexander\ImageDefender\SignImageDefenderInterface;
+
+$app = new Silly\Application();
+
+$app->useContainer($container, true, true);
+
+$app->command('stamp pathToImage savePath [--t=] [--w=] [--h=] [--mr=] [--mb=]',
+    function ($pathToImage, $savePath, $t, $w, $h, $mr, $mb, StampImageDefenderInterface $stampImageDefender, OutputInterface $output) {
+
+        if (!empty($t)) $stampImageDefender->setStampTransparency((int) $t);
+        if (!empty($w)) $stampImageDefender->setStampWidth((int) $w);
+        if (!empty($h)) $stampImageDefender->setStampHeight((int) $h);
+        if (!empty($mr)) $stampImageDefender->setStampMarginRight((int) $mr);
+        if (!empty($mb)) $stampImageDefender->setStampMarginBottom((int) $mb);
+
+        $output->write("path to defended image : " . $stampImageDefender->impose($pathToImage, $savePath));
+
+})->descriptions('imposing stamp to an image', [
+    '--t' => 'stamp transparency',
+    '--w' => 'stamp width',
+    '--h' => 'stamp height',
+    '--mr' => 'stamp margin right',
+    '--mb' => 'stamp margin bottom',
+    'pathToImage' => 'path to your image',
+    'savePath' => 'save path of new image'
+]);
+
+$app->command('sign pathToImage savePath [--t=] [--a=] [--fs=] [--f=] [--mr=] [--mb=] [--text=]',
+    function ($pathToImage, $savePath, $t, $a, $fs, $f, $mr, $mb, $text, SignImageDefenderInterface $signImageDefender, OutputInterface $output) {
+
+        if (!empty($t)) $signImageDefender->setSignTransparency((int) $t);
+        if (!empty($a)) $signImageDefender->setSignAngle((int) $a);
+        if (!empty($fs)) $signImageDefender->setSignFontSize((int) $fs);
+        if (!empty($mr)) $signImageDefender->setSignMarginRight((int) $mr);
+        if (!empty($mb)) $signImageDefender->setSignMarginBottom((int) $mb);
+        if (!empty($f)) $signImageDefender->setFont($f);
+        if (!empty($text)) $signImageDefender->setSign($text);
+
+        $output->write("path to defended image : " . $signImageDefender->impose($pathToImage, $savePath));
+
+})->descriptions('imposing sign to an image', [
+    '--t' => 'text transparency',
+    '--a' => 'text angle',
+    '--fs' => 'text font size',
+    '--f' => 'path to TTF font file',
+    '--text' => 'text you want to impose',
+    '--mr' => 'stamp margin right',
+    '--mb' => 'stamp margin bottom',
+    'pathToImage' => 'path to your image',
+    'savePath' => 'save path of new image'
+]);;
+
+$app->run();
